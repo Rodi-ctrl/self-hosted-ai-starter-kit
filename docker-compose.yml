@@ -75,6 +75,10 @@ services:
       - "n8n import:credentials --separate --input=/demo-data/credentials && n8n import:workflow --separate --input=/demo-data/workflows"
     volumes:
       - ./n8n/demo-data:/demo-data
+      - ./shared:/data/shared
+      - ./n8n-files:/data/files
+      - ./n8n-uploads:/data/uploads
+      - ./n8n-temp:/data/temp
     depends_on:
       postgres:
         condition: service_healthy
@@ -90,6 +94,11 @@ services:
       - n8n_storage:/home/node/.n8n
       - ./n8n/demo-data:/demo-data
       - ./shared:/data/shared
+      - ./n8n-files:/data/files
+      - ./n8n-uploads:/data/uploads
+      - ./n8n-temp:/data/temp
+      - ./n8n-output:/data/output
+      - ./n8n-logs:/data/logs
     depends_on:
       postgres:
         condition: service_healthy
@@ -148,38 +157,4 @@ services:
     image: ollama/ollama:rocm
     depends_on:
      - ollama-gpu-amd
-     version: '3.8'
-services:
-  n8n:
-    image: n8nio/n8n
-    restart: unless-stopped
-    ports:
-      - "5678:5678"
-    networks:
-      - n8n-internal
-    volumes:
-      - n8n_data:/home/node/.n8n
-      - "C:/Users/r.mendes/Documents/n8n_upload:/data/uploads"  # Your local folder
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=password
-
-  qdrant:
-    container_name: qdrant
-    image: qdrant/qdrant
-    restart: unless-stopped
-    networks:
-      - n8n-internal
-    ports:
-      - "6333:6333"
-      - "6334:6334"
-    volumes:
-      - /opt/qdrant/storage:/qdrant/storage
-      - /opt/qdrant/config:/qdrant/config
-
-networks:
-  n8n-internal:
-
-volumes:
-  n8n_data:
+    
