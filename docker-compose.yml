@@ -148,7 +148,7 @@ services:
     image: ollama/ollama:rocm
     depends_on:
      - ollama-gpu-amd
-version: '3.8'
+     version: '3.8'
 services:
   n8n:
     image: n8nio/n8n
